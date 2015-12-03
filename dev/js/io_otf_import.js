@@ -64,6 +64,14 @@
 			// debug(' startFontImport - END\n');
 		}
 
+		var tmpGlyphs = font.glyphs.glyphs;
+		font.glyphs.glyphs = [];
+
+		Object.keys(tmpGlyphs).forEach(function (key) {
+			font.glyphs.glyphs.push(tmpGlyphs[key]);
+		});
+		
+
 
 		/*
 		*
@@ -83,29 +91,28 @@
 		function importOneGlyph(){
 			importStatus('Importing Glyph ' + c + ' of ' + font.glyphs.length);
 
-			if(c >= font.glyphs.length) {
+			if(c >= font.glyphs.glyphs.length) {
 				// setTimeout(importOneKern, 1);
 				startFinalizeFontImport();
 				return;
 			}
 
 			// One Glyph in the font
-			tglyph = font.glyphs[c];
+			tglyph = font.glyphs.glyphs[c];
 
 			// Get the appropriate unicode decimal for this glyph
 			// debug('\n importOneGlyph - START');
 			// debug('\t starting  unicode \t' + tglyph.unicode + ' \t ' + tglyph.name);
-
 			uni = decToHex(tglyph.unicode || 0);
 
 			if(uni === false || uni === '0x0000'){
 				// Check for .notdef
 				// debug('\t !!! Skipping '+tglyph.name+' NO UNICODE !!!');
-				font.glyphs.splice(c, 1);
+				font.glyphs.glyphs.splice(c, 1);
 
 			} else if (filter && isOutOfBounds([uni])){
 				// debug('\t !!! Skipping '+tglyph.name+' OUT OF BOUNDS !!!');
-				font.glyphs.splice(c, 1);
+				font.glyphs.glyphs.splice(c, 1);
 
 			} else {
 
